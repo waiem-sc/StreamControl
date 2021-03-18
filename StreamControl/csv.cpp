@@ -3,6 +3,7 @@
 #include <QTextCodec>
 #include <QRegExp>
 #include <QDebug>
+#include <QMessageBox>
 
 #include "csv.h"
 
@@ -90,6 +91,12 @@ QList<QStringList> CSV::parseFromFile(const QString &filename, const QString &co
         string = in.readAll();
         file.close();
     }
+    else {
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setText("file["+filename+"] open failed.");
+		msgBox.exec();
+	}
     return parse(initString(string));
 }
 
@@ -107,6 +114,8 @@ bool CSV::write(const QList<QStringList> data, const QString &filename, const QS
         QStringList output;
         foreach (QString value, line) {
             if (value.contains(QRegExp(",|\r\n"))) {
+                output << ("\"" + value + "\"");
+            } else if (value.contains(QRegExp("\n"))) {
                 output << ("\"" + value + "\"");
             } else if (value.contains("\"")) {
                 output << value.replace("\"", "”");

@@ -1056,6 +1056,8 @@ void MainWindow::resetFields(QString widget)
             ((QCheckBox*)widgetList[key])->setChecked(false);
         } else if (widgetType[key] == "comboBox") {
             ((ScComboBox*)widgetList[key])->setCurrentIndex(0);
+        } else if (widgetType[key] == "radioGroup") {
+            ((ScRadioGroup*)widgetList[key])->checkFromValue("1");
         }
     }
 }
@@ -1109,6 +1111,12 @@ void MainWindow::swapFields(QString widget)
             uint tempStamp = ((ScTSButton*)widgetList[currField])->getTimeStamp();
             ((ScTSButton*)widgetList[currField])->setTimeStamp(((ScTSButton*)widgetList[newField])->getTimeStamp());
             ((ScTSButton*)widgetList[newField])->setTimeStamp(tempStamp);
+        } else if (widgetType[currField] == "radioGroup") {
+            ScRadioGroup *currRadioGroup = ((ScRadioGroup*)widgetList[currField]);
+            ScRadioGroup *newRadioGroup  = ((ScRadioGroup*)widgetList[newField]);
+            QString tempRadioData = newRadioGroup->getCurrentRadio();
+            newRadioGroup->checkFromValue(currRadioGroup->getCurrentRadio());
+            currRadioGroup->checkFromValue(tempRadioData);
         }
      }
 
